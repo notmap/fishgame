@@ -93,7 +93,8 @@ cc.Class({
 
         this.player.forEach((item, index, arr) => {
             var player = item;
-            this.cardArr[index]['card'].forEach((item, index, arr) => {
+            // this.cardArr[index]['card'].forEach((item, index, arr) => {
+            this.cardArr[index]['type'].forEach((item, index, arr) => {
                 this[player].node.children[index].getComponent(cc.Sprite).spriteFrame = this.cardAsset[item];
             });
         });
@@ -114,9 +115,9 @@ cc.Class({
             cardData.ten = ten;
             cardData.hua = hua;
             cardData.total = total;
-            cardData.type = this.getCardType(five, ten, hua, total, cardData.cardShow);
+            cardData.type = this.getCardType(five, ten, hua, total, cardData.cardShow, cardData.card);
         });
-        console.log(this.cardArr);
+        // console.log(this.cardArr);
     },
 
     getCardTypeArr: function(arr) {
@@ -133,32 +134,79 @@ cc.Class({
         return typeArr;
     },
 
-    getCardType: function(five, ten, hua, total, cardShow) {
+    checkNiu: function(arr) {
+        arr = arr.map((item, index, arr) => { return item > 10 ? 10 : item; });
+        for(var indexA = 0; indexA < arr.length; indexA ++) {
+            for(var indexB = indexA + 1; indexB < arr.length; indexB ++) {
+                for(var indexC = indexB + 1; indexC < arr.length; indexC ++) {
+                    var total = arr[indexA] + arr[indexB] + arr[indexC];
+                    if(total % 10 == 0) {
+                        return [indexA, indexB, indexC];
+                    }
+                }
+            }
+        }
+    },
 
-        var typeList = ['没牛', '牛一', '牛二', '牛三', '牛四', '牛五', '牛六', '牛七', '牛八', '牛九', '牛牛', '五花', '炸弹', '五小'];
+    getCardType: function(five, ten, hua, total, cardShow, card) {
+
+        // var typeList = ['没牛', '牛一', '牛二', '牛三', '牛四', '牛五', '牛六', '牛七', '牛八', '牛九', '牛牛', '五花', '炸弹', '五小'],
+        //     typeArr = this.getCardTypeArr(cardShow),
+        //     type;
+
+        // if(five == 5 && total < 10) type = 12;                                                          // 五小
+        // if(Math.max.apply(null, typeArr) == 4) type = 11;                                               // 炸弹
+        // if(hua == 5) type = 10;                                                                         // 五花
+        // if(Math.max.apply(null, typeArr) == 3 && Math.min.apply(null, typeArr) == 2) type = undefined;  // 葫芦
+
+
+
+
+
+
+
+
+
+        // console.log(card)
+
+
+        var niu = this.checkNiu(cardShow);
+        var cardSort;
+        if(niu) {
+            cardSort = card.map((item) => { return item; });
+            niu.map((item) => {
+                var insert = cardSort[item];
+                cardSort.splice(item, 1);
+                cardSort.splice(0, 0, card[item]);
+            });
+        }
+        else {
+            cardSort = card;
+        }
+
+        console.log(cardSort);
+
+        return cardSort;
+
+
+
         
-        var typeArr = this.getCardTypeArr(cardShow);
-        console.log(typeArr);
 
 
 
-        // var type;
 
-        // type = (function() {
-        //     return five == 5 && total < 10 ? 13 : 0;  // 五小
-        // })();
+
+
+
+
+
+
+
+
+
+
 
         // console.log(type);
-
-
-
-
-        Math.max.apply(null, typeArr) == 4 && console.log('炸弹');
-        Math.max.apply(null, typeArr) == 3 && Math.min.apply(null, typeArr) == 2 && console.log('葫芦');
-
-
-
-
     },
 
     getRandom: function(min, max) {
@@ -169,26 +217,6 @@ cc.Class({
         // let cardSlot = cc.instantiate(this.cardPrefab);
         // cardSlot.getComponent(cc.Sprite).spriteFrame = this.cardAsset[item];
         // this.playerA.node.addChild(cardSlot);
-
-        // arr = arr.sort((a,b) => {return a-b;});
-
-        // function cardConut(){
-        //     var cardList_sort = cardList.sort(); // 卡牌数组排序
-        //     var arr = [];
-        //     var i = 0;
-        //     while (i < cardList_sort.length) {
-        //         var cardValue = cardList_sort[i];
-        //         var last_same_value = cardList_sort.lastIndexOf(cardValue); // 最后一个相同的值的下标
-
-        //         var item = {
-        //             key: cardValue,
-        //             num: last_same_value - i + 1
-        //         }
-        //         i += last_same_value - i + 1
-        //         arr.push(item);
-        //     }
-        //     return arr
-        // }
     }
 
     // ,update: function (dt) {}
